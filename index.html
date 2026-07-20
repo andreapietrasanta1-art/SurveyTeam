@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Model Survey</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #333; }
+        .nav { background: #1a237e; color: white; padding: 16px 32px; display: flex; align-items: center; gap: 24px; }
+        .nav h1 { font-size: 20px; font-weight: 600; }
+        .nav button { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .nav button.active { background: white; color: #1a237e; font-weight: 600; }
+        .container { max-width: 1100px; margin: 32px auto; padding: 0 24px; }
+
+        /* Survey */
+        .survey-header { display: grid; grid-template-columns: 1fr 280px 160px; gap: 8px; padding: 12px 16px; background: #1a237e; color: white; border-radius: 8px 8px 0 0; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .step-row { display: grid; grid-template-columns: 1fr 280px 160px; gap: 8px; padding: 14px 16px; background: white; border-bottom: 1px solid #e8eaf0; align-items: center; }
+        .step-row:last-child { border-radius: 0 0 8px 8px; }
+        .step-row:hover { background: #f8f9ff; }
+        .step-name { font-size: 14px; line-height: 1.4; }
+        .step-name.section { font-weight: 700; color: #1a237e; }
+        .radio-group { display: flex; gap: 4px; }
+        .radio-group label { display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 4px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; transition: all 0.15s; }
+        .radio-group label:hover { border-color: #1a237e; }
+        .radio-group input:checked + span { font-weight: 600; }
+        .radio-group label:has(input:checked) { background: #e8eaf6; border-color: #1a237e; }
+        .radio-group input { display: none; }
+        .yn-group { display: flex; gap: 6px; }
+        .yn-group label { padding: 4px 14px; border-radius: 4px; font-size: 13px; cursor: pointer; border: 1px solid #ddd; transition: all 0.15s; }
+        .yn-group label:hover { border-color: #388e3c; }
+        .yn-group label:has(input:checked) { background: #e8f5e9; border-color: #388e3c; }
+        .yn-group label.no-label:has(input:checked) { background: #fbe9e7; border-color: #d32f2f; }
+        .yn-group input { display: none; }
+
+        .submit-area { margin-top: 24px; text-align: center; }
+        .submit-area input { padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; margin-right: 12px; width: 200px; }
+        .submit-area button { background: #1a237e; color: white; border: none; padding: 12px 32px; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; }
+        .submit-area button:hover { background: #283593; }
+        .toast { position: fixed; bottom: 24px; right: 24px; background: #388e3c; color: white; padding: 14px 24px; border-radius: 8px; font-size: 14px; display: none; z-index: 999; }
+
+        /* Dashboard */
+        .dash-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+        .dash-table th { background: #1a237e; color: white; padding: 12px 10px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .dash-table td { padding: 10px; font-size: 13px; border-bottom: 1px solid #eee; text-align: center; }
+        .dash-table td:first-child { text-align: left; font-size: 13px; }
+        .dash-table tr:hover td { background: #f8f9ff; }
+        .badge { display: inline-block; min-width: 28px; padding: 2px 8px; border-radius: 12px; font-weight: 600; font-size: 12px; }
+        .total-votes { text-align: center; margin-bottom: 16px; color: #666; font-size: 14px; }
+        .clear-btn { background: #d32f2f; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-left: 12px; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <h1>Operating Model</h1>
+        <button id="btn-survey" class="active" onclick="showView('survey')">Survey</button>
+        <button id="btn-dashboard" onclick="showView('dashboard')">Dashboard</button>
+    </div>
+
+    <div class="container" id="survey-view">
+        <div class="survey-header">
+            <div>Step</div>
+            <div>Who is Responsible?</div>
+            <div>Done Today?</div>
+        </div>
+        <div id="steps-container"></div>
+        <div class="submit-area">
+            <button onclick="submitVotes()">Submit Votes</button>
+        </div>
+    </div>
+
+    <div class="container" id="dashboard-view" style="display:none;">
+        <div class="total-votes">
+            Total submissions: <strong id="total-count">0</strong>
+            <button class="clear-btn" onclick="clearData()">Clear All Data</button>
+        </div>
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <th style="width:35%">Step</th>
+                    <th>PM</th>
+                    <th>Dev</th>
+                    <th>Factory</th>
+                    <th>Other</th>
+                    <th style="border-left:3px solid rgba(255,255,255,0.4);">Yes</th>
+                    <th>No</th>
+                </tr>
+            </thead>
+            <tbody id="dash-body"></tbody>
+        </table>
+    </div>
+
+    <div class="toast" id="toast">Votes submitted successfully!</div>
+
+    <script>
+        const STEPS = [
+            { name: "Use case definition", section: true },
+            { name: "Benefits definition", section: true },
+            { name: "Process mapping", section: true },
+            { name: "E2E including backend/frontend", section: true, header: true },
+            { name: "E2E software functional requirements optimal definition" },
+            { name: "Functional testbook creation" },
+            { name: "Functional acceptance criteria creation" },
+            { name: "Frontend/backend ark design" },
+            { name: "Technical analysis / spec (incl. technical integration)" },
+            { name: "Collection of needed technical specs from other IT teams (APIs, tech users, network setup, ...)" },
+            { name: "E2E software development" },
+            { name: "Testbook execution" },
+            { name: "Automation", section: true, header: true },
+            { name: "Automation requirement definition" },
+            { name: "Train/test dataset request definition" },
+            { name: "Dataset collection" },
+            { name: "Dataset labeling / collection of labels" },
+            { name: "Automation flow (agent / algorithm / LLM call flow) technical design" },
+            { name: "Automation integration design" },
+            { name: "Automation full technical design validation" },
+            { name: "Automation flow development" },
+            { name: "Automation test book definition" },
+            { name: "Automation flow industrialization" },
+            { name: "Industrialized automation flow test execution" }
+        ];
+
+        // JSONBin.io configuration
+        // 1. Create free account at https://jsonbin.io
+        // 2. Create a new bin with content: []
+        // 3. Paste your Bin ID and API key below
+        const JSONBIN_BIN_ID = "6a5e1d72f5f4af5e29a7a926";
+        const JSONBIN_API_KEY = "$2a$10$T03nZFUngzWGlwVh3vX2K.g0FkWmmlLrHHbSo/ovwmqvP/2.x599K";
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
+        let cachedVotes = [];
+
+        async function getVotes() {
+            try {
+                const res = await fetch(JSONBIN_URL + "/latest", {
+                    headers: { "X-Master-Key": JSONBIN_API_KEY }
+                });
+                const data = await res.json();
+                cachedVotes = (data.record && data.record.votes) || [];
+            } catch (e) {
+                console.error("Failed to fetch votes:", e);
+            }
+            return cachedVotes;
+        }
+
+        async function saveVotes(allVotes) {
+            try {
+                await fetch(JSONBIN_URL, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": JSONBIN_API_KEY
+                    },
+                    body: JSON.stringify({ votes: allVotes })
+                });
+            } catch (e) {
+                console.error("Failed to save votes:", e);
+                alert("Error saving votes. Please try again.");
+            }
+        }
+
+        function renderSurvey() {
+            const container = document.getElementById("steps-container");
+            container.innerHTML = STEPS.map((step, i) => `
+                <div class="step-row">
+                    <div class="step-name ${step.section ? 'section' : ''}">${step.name}</div>
+                    ${step.header ? '<div></div><div></div>' : `
+                    <div class="radio-group">
+                        ${["PM", "Dev", "Factory", "Other"].map(r => `
+                            <label><input type="radio" name="resp-${i}" value="${r}"><span>${r}</span></label>
+                        `).join("")}
+                    </div>
+                    <div class="yn-group">
+                        <label><input type="radio" name="done-${i}" value="Yes"><span>Yes</span></label>
+                        <label class="no-label"><input type="radio" name="done-${i}" value="No"><span>No</span></label>
+                    </div>`}
+                </div>
+            `).join("");
+        }
+
+        async function submitVotes() {
+            const votes = [];
+            let incomplete = false;
+            STEPS.forEach((step, i) => {
+                if (step.header) {
+                    votes.push({ step: step.name, responsible: null, doneToday: null });
+                    return;
+                }
+                const resp = document.querySelector(`input[name="resp-${i}"]:checked`);
+                const done = document.querySelector(`input[name="done-${i}"]:checked`);
+                if (!resp || !done) { incomplete = true; }
+                votes.push({
+                    step: step.name,
+                    responsible: resp ? resp.value : null,
+                    doneToday: done ? done.value : null
+                });
+            });
+
+            if (incomplete) {
+                if (!confirm("Some steps are not fully filled. Submit anyway?")) return;
+            }
+
+            const allVotes = await getVotes();
+            allVotes.push({
+                timestamp: new Date().toISOString(),
+                votes
+            });
+            await saveVotes(allVotes);
+
+            // Reset form
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+
+            const toast = document.getElementById("toast");
+            toast.style.display = "block";
+            setTimeout(() => toast.style.display = "none", 3000);
+        }
+
+        function badgeStyle(count, maxCount) {
+            if (count === 0 || maxCount === 0) return 'background:#f5f5f5;color:#999;';
+            const intensity = count / maxCount;
+            const bg = Math.round(240 - intensity * 180);
+            const textColor = intensity > 0.5 ? '#fff' : '#333';
+            return `background:rgb(${bg},${bg},${bg});color:${textColor};`;
+        }
+
+        async function renderDashboard() {
+            const allVotes = await getVotes();
+            document.getElementById("total-count").textContent = allVotes.length;
+            const maxCount = allVotes.length;
+
+            const body = document.getElementById("dash-body");
+            body.innerHTML = STEPS.map((step, i) => {
+                const counts = { PM: 0, Dev: 0, Factory: 0, Other: 0, Yes: 0, No: 0 };
+                allVotes.forEach(submission => {
+                    const v = submission.votes[i];
+                    if (v && v.responsible) counts[v.responsible]++;
+                    if (v && v.doneToday) counts[v.doneToday]++;
+                });
+                if (step.header) {
+                    return `<tr>
+                        <td><strong style="color:#1a237e;">${step.name}</strong></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>`;
+                }
+                return `<tr>
+                    <td style="padding-left:24px;">${step.name}</td>
+                    <td><span class="badge" style="${badgeStyle(counts.PM, maxCount)}">${counts.PM}</span></td>
+                    <td><span class="badge" style="${badgeStyle(counts.Dev, maxCount)}">${counts.Dev}</span></td>
+                    <td><span class="badge" style="${badgeStyle(counts.Factory, maxCount)}">${counts.Factory}</span></td>
+                    <td><span class="badge" style="${badgeStyle(counts.Other, maxCount)}">${counts.Other}</span></td>
+                    <td style="border-left:3px solid #ddd;"><span class="badge" style="${badgeStyle(counts.Yes, maxCount)}">${counts.Yes}</span></td>
+                    <td><span class="badge" style="${badgeStyle(counts.No, maxCount)}">${counts.No}</span></td>
+                </tr>`;
+            }).join("");
+        }
+
+        function showView(view) {
+            document.getElementById("survey-view").style.display = view === "survey" ? "block" : "none";
+            document.getElementById("dashboard-view").style.display = view === "dashboard" ? "block" : "none";
+            document.getElementById("btn-survey").className = view === "survey" ? "active" : "";
+            document.getElementById("btn-dashboard").className = view === "dashboard" ? "active" : "";
+            if (view === "dashboard") renderDashboard();
+        }
+
+        async function clearData() {
+            if (confirm("Are you sure you want to clear ALL votes?")) {
+                await saveVotes([]);
+                renderDashboard();
+            }
+        }
+
+        renderSurvey();
+    </script>
+</body>
+</html>
