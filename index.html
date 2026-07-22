@@ -73,6 +73,7 @@
         <div class="total-votes">
             Total submissions: <strong id="total-count">0</strong>
             <button class="clear-btn" onclick="clearData()">Clear All Data</button>
+            <button onclick="exportPDF()" style="background:#1a237e;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;margin-left:12px;">Export PDF</button>
         </div>
         <table class="dash-table">
             <thead>
@@ -91,6 +92,8 @@
     </div>
 
     <div class="toast" id="toast">Votes submitted successfully!</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
     <script>
         const STEPS = [
@@ -263,6 +266,58 @@
                 await saveVotes([]);
                 renderDashboard();
             }
+        }
+
+        async function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const allVotes = await getVotes();
+            const totalSubmissions = allVotes.length;
+
+            // Title
+            doc.setFontSize(18);
+            doc.setTextColor(26, 35, 126);
+            doc.text("Operating Model - Dashboard Report", 14, 20);
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text(`Total submissions: ${totalSubmissions}`, 14, 28);
+            doc.text(`Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 14, 34);
+
+            // Build table data
+            const headers = [["Step", "PM", "Dev", "Factory", "Other", "Yes", "No"]];
+            const body = [];
+            STEPS.forEach((step, i) => {
+                const counts = { PM: 0, Dev: 0, Factory: 0, Other: 0, Yes: 0, No: 0 };
+                allVotes.forEach(submission => {
+                    const v = submission.votes[i];
+                    if (v && v.responsible) counts[v.responsible]++;
+                    if (v && v.doneToday) counts[v.doneToday]++;
+                });
+                if (step.header) {
+                    body.push([{ content: step.name, colSpan: 7, styles: { fontStyle: "bold", textColor: [26, 35, 126] } }]);
+                } else {
+                    body.push(["  " + step.name, counts.PM, counts.Dev, counts.Factory, counts.Other, counts.Yes, counts.No]);
+                }
+            });
+
+            doc.autoTable({
+                head: headers,
+                body: body,
+                startY: 40,
+                styles: { fontSize: 9, cellPadding: 3 },
+                headStyles: { fillColor: [26, 35, 126], textColor: 255 },
+                columnStyles: {
+                    0: { cellWidth: 80 },
+                    1: { halign: "center" },
+                    2: { halign: "center" },
+                    3: { halign: "center" },
+                    4: { halign: "center" },
+                    5: { halign: "center" },
+                    6: { halign: "center" }
+                }
+            });
+
+            doc.save("operating-model-report.pdf");
         }
 
         renderSurvey();
