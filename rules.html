@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Model - Rules</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #333; padding: 32px; }
+        h1 { color: #1a237e; margin-bottom: 8px; }
+        .subtitle { color: #666; margin-bottom: 32px; font-size: 14px; }
+        .section-title { background: #1a237e; color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; font-size: 16px; font-weight: 700; margin-top: 32px; }
+        .step { background: white; border: 1px solid #e0e0e0; border-top: none; padding: 20px 24px; }
+        .step:last-child { border-radius: 0 0 8px 8px; }
+        .step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .step-name { font-size: 15px; font-weight: 600; color: #333; }
+        .owner-badge { background: #e8eaf6; color: #1a237e; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .rules { padding-left: 20px; }
+        .rules li { font-size: 14px; line-height: 1.8; color: #555; }
+        .rules li strong { color: #333; }
+        .role { font-weight: 700; text-transform: uppercase; color: #6a1b9a; }
+        .no-rules { font-size: 13px; color: #999; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div style="background:#1a237e;color:white;padding:16px 32px;display:flex;align-items:center;gap:24px;margin:-32px -32px 32px -32px;">
+        <h1 style="font-size:20px;font-weight:600;color:white;margin:0;">Operating Model</h1>
+        <a href="index.html" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:8px 20px;border-radius:6px;font-size:14px;text-decoration:none;">Survey</a>
+        <a href="index.html#dashboard" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:8px 20px;border-radius:6px;font-size:14px;text-decoration:none;">Dashboard</a>
+        <a href="rules.html" style="background:white;color:#1a237e;padding:8px 20px;border-radius:6px;font-size:14px;font-weight:600;text-decoration:none;">Rules</a>
+    </div>
+    <h1>Operating Model - Rules & Ownership</h1>
+    <p class="subtitle">Detailed rules for each step of the operating model</p>
+
+    <div class="section-title">E2E including backend/frontend</div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">E2E software functional requirements optimal definition</span>
+            <span class="owner-badge">Owner: Project Leader</span>
+        </div>
+        <ul class="rules">
+            <li>Requirements must be created and modified through <strong>TARS</strong>.</li>
+            <li>The <span class="role">Project Leader</span> must <strong>submit</strong> a requirement or a new version of a requirement. Until submitted, the requirement can be freely modified without creating a new version — but the developer will <strong>not consider it</strong>. The developer only considers submitted versions.</li>
+            <li>The <span class="role">Project Leader</span> is responsible for creating a <strong>reasonably optimal</strong> functional requirement. If the user asks for unreasonable or useless features, the <span class="role">Project Leader</span> must challenge them and propose a better solution.</li>
+            <li>The <span class="role">Software Engineer</span> is responsible for providing <strong>feedback</strong> if alternative approaches could lead to a significantly better technical implementation.</li>
+            <li>In case of disagreement, the <span class="role">Project Leader</span> has <strong>final ownership</strong> of the functional requirement, but should consider escalating the decision if needed.</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Functional testbook &amp; acceptance criteria creation</span>
+            <span class="owner-badge">Owner: Project Leader</span>
+        </div>
+        <ul class="rules">
+            <li>A <strong>first version</strong> of the functional testbook and acceptance criteria must be shared together with the functional requirements.</li>
+            <li>Each test case must include the <strong>full user journey</strong> to be verified, along with its <strong>acceptance criteria</strong>, in order to allow automatic scraping with AI.</li>
+            <li>The <span class="role">Project Leader</span> is responsible for creating a <strong>significant testbook with clear acceptance criteria</strong>, such that if 100% of test cases are passed and all acceptance criteria are met, UAT will raise only marginal bugs.</li>
+            <li>The <span class="role">Software Engineer</span> is responsible to: <strong>generate the Playwright code</strong> to execute all test cases against their acceptance criteria, execute them, and deliver software that passes <strong>100% of test cases</strong> and meets all acceptance criteria.</li>
+            <li>The <span class="role">Software Engineer</span> is responsible for verifying that the software has <strong>no evident objective bugs</strong>, even if not explicitly specified in the requirements, test cases or acceptance criteria.</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Frontend/backend ark design</span>
+            <span class="owner-badge">Owner: Software Engineer</span>
+        </div>
+        <ul class="rules">
+            <li>The <span class="role">Software Engineer</span> is the <strong>sole responsible</strong> for this activity and must ensure compliance with both the <strong>AI Factory guidelines</strong> and the <strong>functional requirements</strong>.</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Technical analysis / spec (incl. technical integration)</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Collection of needed technical specs from other IT teams</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">E2E software development</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Testbook execution</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="section-title">Automation</div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Automation requirement definition</span>
+            <span class="owner-badge">Owner: Project Leader</span>
+        </div>
+        <ul class="rules">
+            <li>The <span class="role">Project Leader</span> is responsible for defining exactly:
+                <ul style="padding-left:20px; margin-top:6px;">
+                    <li>The <strong>expected input and output</strong> of the automation</li>
+                    <li>The <strong>expected volumes</strong> to be managed</li>
+                    <li>The <strong>expected SLAs</strong></li>
+                    <li>Any <strong>cost constraints</strong></li>
+                    <li>The <strong>metrics to be maximized</strong> and the <strong>constraints to be respected</strong></li>
+                </ul>
+            </li>
+            <li><em>Submission of automation requirements through TARS to be evaluated</em></li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Train/test dataset request definition</span>
+            <span class="owner-badge">Owner: AI Developer</span>
+        </div>
+        <ul class="rules">
+            <li>The <span class="role">AI Developer</span> is responsible for defining the <strong>exact minimum requirements</strong> of the dataset in terms of <strong>size and distribution</strong>.</li>
+            <li>If it's not possible to satisfy the minimum requirements, the <span class="role">AI Developer</span> and the <span class="role">Project Leader</span> can agree on a different proposal. The <span class="role">AI Developer</span> remains responsible for delivering an experiment that is <strong>statistically significant</strong> and will mirror the production results.</li>
+            <li>If the <span class="role">AI Developer</span> is not confident about the relevance of the dataset, he/she is responsible to <strong>escalate the topic</strong> in order to discuss and agree a <strong>GO / No-GO</strong>.</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Dataset collection</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Dataset labeling / collection of labels</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Automation flow (agent / algorithm / LLM call flow) technical design</span>
+            <span class="owner-badge">Owner: AI Developer</span>
+        </div>
+        <ul class="rules">
+            <li>The <span class="role">AI Developer</span> is responsible for designing the flow / algorithm that satisfies <strong>all requirements</strong> (ref. rule 1 of Automation requirement definition).</li>
+            <li>The flow must be designed to follow the <strong>basic cloud production environment requirements</strong> (e.g. stateless).</li>
+            <li>The <span class="role">AI Developer</span> can involve the <span class="role">Software Engineer</span> only when the flow design is <strong>almost final</strong>.</li>
+            <li>The <span class="role">Software Engineer</span> is responsible for reviewing the flow and <strong>confirming or proposing</strong> the key technical and infrastructure choices and constraints.</li>
+            <li>If a technical / infrastructure choice impacts the AI flow (to maximize software stability / maintainability), the <span class="role">AI Developer</span> and the <span class="role">Software Engineer</span> should agree on it. In case of disagreement, the topic must be <strong>escalated</strong> — as the <span class="role">AI Developer</span> is the end responsible for <strong>automation performance</strong> and the <span class="role">Software Engineer</span> is the end responsible for <strong>end-to-end production software performance</strong>.</li>
+            <li>After the review, the <span class="role">AI Developer</span> <strong>cannot change the flow anymore</strong>.</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Automation integration design</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Automation full technical design validation</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Automation flow development</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Automation test book definition</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Automation flow industrialization</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-name">Industrialized automation flow test execution</span>
+            <span class="owner-badge">Owner: TBD</span>
+        </div>
+        <p class="no-rules">Rules to be defined</p>
+    </div>
+
+</body>
+</html>
