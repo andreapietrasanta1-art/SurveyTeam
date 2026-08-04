@@ -119,6 +119,7 @@
                     <li>The <strong>expected SLAs</strong></li>
                     <li>Any <strong>cost constraints</strong></li>
                     <li>The <strong>metrics to be maximized</strong> and the <strong>constraints to be respected</strong></li>
+                    <li>The <strong>integration points</strong> (how to get the input, how to send the output, any integration required during the flow execution)</li>
                 </ul>
             </li>
             <li><em>Submission of automation requirements through TARS to be evaluated</em></li>
@@ -159,10 +160,10 @@
             <span class="owner-badge">Owner: AI Developer</span>
         </div>
         <ul class="rules">
-            <li>The <span class="role">AI Developer</span> is responsible for designing the flow / algorithm that satisfies <strong>all requirements</strong> (ref. rule 1 of Automation requirement definition).</li>
+            <li>The <span class="role">AI Developer</span> is responsible for designing the flow / algorithm that satisfies <strong>all the automation requirements</strong> (ref. rule 1 of Automation requirement definition).</li>
             <li>The flow must be designed to follow the <strong>basic cloud production environment requirements</strong> (e.g. stateless).</li>
             <li>The <span class="role">AI Developer</span> can involve the <span class="role">Software Engineer</span> only when the flow design is <strong>almost final</strong>.</li>
-            <li>The <span class="role">Software Engineer</span> is responsible for reviewing the flow and <strong>confirming or proposing</strong> the key technical and infrastructure choices and constraints.</li>
+            <li>The <span class="role">Software Engineer</span> is responsible for <strong>analyzing the flow</strong> and confirming or proposing the key technical and infrastructure choices and constraints.</li>
             <li>If a technical / infrastructure choice impacts the AI flow (to maximize software stability / maintainability), the <span class="role">AI Developer</span> and the <span class="role">Software Engineer</span> should agree on it. In case of disagreement, the topic must be <strong>escalated</strong> — as the <span class="role">AI Developer</span> is the end responsible for <strong>automation performance</strong> and the <span class="role">Software Engineer</span> is the end responsible for <strong>end-to-end production software performance</strong>.</li>
             <li>After the review, the <span class="role">AI Developer</span> <strong>cannot change the flow anymore</strong>.</li>
         </ul>
@@ -171,9 +172,13 @@
     <div class="step">
         <div class="step-header">
             <span class="step-name">Automation integration design</span>
-            <span class="owner-badge">Owner: TBD</span>
+            <span class="owner-badge">Owner: Software Engineer</span>
         </div>
-        <p class="no-rules">Rules to be defined</p>
+        <ul class="rules">
+            <li>The <span class="role">AI Developer</span> can propose the design of the integrations as part of the automation flow if the two things are strictly connected (especially in the case of agents).</li>
+            <li>Regardless of who proposes the integration design, the <span class="role">Software Engineer</span> is responsible for the <strong>final design of the technical integration</strong> with external systems.</li>
+            <li>In case the integration design is not proposed by the <span class="role">AI Developer</span>, or is not necessary to complete the PoC, the <span class="role">Software Engineer</span> can perform this task <strong>independently of the PoC</strong>, based on the timeline agreed with the <span class="role">Project Leader</span>.</li>
+        </ul>
     </div>
 
     <div class="step">
@@ -187,9 +192,17 @@
     <div class="step">
         <div class="step-header">
             <span class="step-name">Automation flow development</span>
-            <span class="owner-badge">Owner: TBD</span>
+            <span class="owner-badge">Owner: AI Developer</span>
         </div>
-        <p class="no-rules">Rules to be defined</p>
+        <ul class="rules">
+            <li>The <span class="role">AI Developer</span> is responsible for developing the automation flow with the objective to:
+                <ul style="padding-left:20px; margin-top:6px;">
+                    <li><strong>Maximize the agreed metrics</strong> on the relevant agreed dataset</li>
+                    <li>Follow the <strong>basic cloud production environment requirements</strong> (as per the design)</li>
+                </ul>
+            </li>
+            <li>The automation flow development and optimization should be <strong>as automatic as possible</strong>, based on an optimal design and dataset construction. The <span class="role">AI Developer</span> is responsible for creating scripts to automatically optimize prompts, skills, parameters, etc., in order to quickly deploy a new version whenever anything changes (model, dataset, requirements, …).</li>
+        </ul>
     </div>
 
     <div class="step">
@@ -203,9 +216,19 @@
     <div class="step">
         <div class="step-header">
             <span class="step-name">Automation flow industrialization</span>
-            <span class="owner-badge">Owner: TBD</span>
+            <span class="owner-badge">Owner: Software Engineer</span>
         </div>
-        <p class="no-rules">Rules to be defined</p>
+        <ul class="rules">
+            <li>The <span class="role">Software Engineer</span> is responsible for the <strong>industrialization and release in production</strong> of the automation flow.</li>
+            <li>The industrialized software must:
+                <ul style="padding-left:20px; margin-top:6px;">
+                    <li>Be <strong>compliant with the agreed technical design</strong></li>
+                    <li>Pass <strong>100% of the automation test cases</strong></li>
+                </ul>
+            </li>
+            <li>In case the technical design must be <strong>substantially changed</strong> during the industrialization phase (e.g. from online to batch inference, change of Python libraries, from Lambda to EC2, …), the <span class="role">Software Engineer</span> should document the changes. This will enable future contributions by the <span class="role">AI Developer</span> on the industrialized code and continuous improvement of the alignment of best practices.</li>
+            <li>In case a change of the technical design affects automation performance — even if 100% of test cases are passed — such change must be <strong>agreed with the <span class="role">AI Developer</span></strong>. In case of no agreement, the topic must be <strong>escalated</strong> (ref. Automation flow technical design).</li>
+        </ul>
     </div>
 
     <div class="step">
